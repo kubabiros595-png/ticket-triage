@@ -82,6 +82,7 @@ I built this project with AI assistance. I defined the workflow rules, used synt
 - `test-results.md`: test method, results and limits
 - `workflow-diagram.png`: workflow overview
 - `workflow.png`: n8n workflow screenshot
+- `eval-workflow.png`: evaluation workflow screenshot
 
 ## Next improvements
 
@@ -97,3 +98,5 @@ I built this project with AI assistance. I defined the workflow rules, used synt
 ![Workflow overview](workflow-diagram.png)
 
 ![n8n workflow](workflow.png)
+
+![Evaluation workflow](eval-workflow.png)
