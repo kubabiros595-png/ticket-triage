@@ -1,0 +1,23 @@
+entry_id,entry_type,category,title,panel_path,content,status
+R-001,rule,all,Confirmed facts only,,Use only facts from entries with status confirmed. Do not use your general knowledge about software.,confirmed
+R-002,rule,all,Report gaps,,"If the answer is missing, unclear, or depends on an entry with status not_confirmed, do not guess. Set needs_human to true and describe exactly what is missing in bible_gap.",confirmed
+R-003,rule,all,Human decisions,,"Refunds, credits, compensation, and suspension decisions belong to a human. Never promise or suggest an outcome. Set needs_human to true.",confirmed
+R-004,rule,all,Security,,"If a customer may see data of another customer or there is any other security risk, give no troubleshooting steps. Say the team is reviewing it. Set needs_human to true.",confirmed
+R-005,rule,all,No invented steps,,Give steps and panel paths only as written in confirmed entries. List the id of each entry you used in used_entries.,confirmed
+R-006,rule,all,Scope of the security rule,,"R-004 applies only to a real risk, such as visible data of another customer, an unknown person using an account, or a stated breach. A colleague helping with work, a missing reset email, or a changed email address is not a security risk by itself. In those cases give the confirmed steps. Urgency: a person who can continue work through a colleague or another app is medium, not high.",confirmed
+R-007,rule,all,Steps must fit the problem,,"Never suggest a step the customer says they already tried. Give a step only if it clearly fits the reported problem. Do not give single-user steps for a problem that affects a whole team or company. If no confirmed step fits, give no steps, say the team will review it, and set needs_human to true.",confirmed
+G-501,article,general,What OrbitDemo is,Home,"OrbitDemo is a fictional web app for team projects and files. Main areas: Home, Reports, Files, Settings.",confirmed
+B-101,article,billing,Where to find invoices,Settings > Billing > Invoices,Owners and Billing admins can open and download invoice PDFs here.,confirmed
+B-102,article,billing,Change the invoice email,Settings > Billing > Invoice recipient,Owners and Billing admins can change the recipient email. The change applies from the next invoice.,confirmed
+B-103,article,billing,Company and VAT details,Settings > Billing > Company details,"Owners can edit company name, address and VAT number. Changes apply to future invoices only. Correcting an issued invoice requires the billing team.",confirmed
+B-104,article,billing,Payments list and duplicate charges,Settings > Billing > Payments,The list shows each payment with status Paid or Pending. A Pending item is an authorisation that may disappear from the bank statement. A possible duplicate must be verified by the billing team.,confirmed
+B-105,article,billing,Refunds after cancelling,,The refund policy for unused days is under review and is not documented.,not_confirmed
+T-201,article,technical,CSV export limit,Reports > Export,One CSV export can cover at most 31 days. A longer range stops with an error. Export one month at a time.,confirmed
+T-202,article,technical,File uploads,Files > Upload,The maximum size is 100 MB per file. Causes of failed uploads for a whole company are not documented.,confirmed
+T-203,article,technical,Invoice logo,Settings > Company > Logo,The logo on invoice PDFs comes from this page. Use a PNG at least 600 px wide.,confirmed
+T-204,article,technical,Dashboard fields,Home > Dashboard,Active projects counts projects not archived. Storage used shows the total size of all files. Reasons for a blank dashboard are not documented.,confirmed
+A-301,article,account_access,Reset a password,Login page > Forgot password,The reset link goes only to the email of the account and is valid for 30 minutes. Check the spam folder.,confirmed
+A-302,article,account_access,Team roles,Settings > Team,"Roles are Owner, Admin and Member. Only an Owner or Admin can invite or remove users.",confirmed
+A-303,article,account_access,Account suspended message,,The reasons for this message and how to lift a suspension are not documented.,not_confirmed
+A-304,article,account_access,Billing admin access,Settings > Team,Billing admin is an extra permission that an Owner can give to any Member here. A Member without it cannot change billing settings.,confirmed
+F-401,article,feature_request,Feature requests,,"Requests are passed to the product team. There is no public roadmap, so never confirm a feature or date.",confirmed
