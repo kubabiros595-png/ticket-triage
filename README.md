@@ -75,6 +75,7 @@ I built this project with AI assistance. I defined the workflow rules, used synt
 ## Files
 
 - `Ticket Triage.json`: main n8n workflow export
+- `Ticket Triage Eval.json`: evaluation workflow export
 - `demo_tickets.csv`: fictional tickets with expected answers
 - `product_bible.csv`: fictional rules and product knowledge
 - `ticket-triage-results.csv`: saved results for all 48 fictional tickets

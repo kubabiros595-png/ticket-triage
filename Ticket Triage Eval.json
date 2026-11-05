@@ -1,0 +1,238 @@
+{
+  "name": "Ticket Triage Eval",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "81554fd9-dfb5-4b63-8c77-1da1a7bdaf7b",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "hUJHtJkrJfd0tmPE",
+          "cachedResultName": "Demo Tickets"
+        },
+        "returnAll": true
+      },
+      "id": "468b3293-de0b-4cf3-a067-4c8fc74b3ef6",
+      "name": "Get expected answers",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "FJb5ubv7UMyyDoPc",
+          "cachedResultName": "Ticket Triage Results"
+        },
+        "returnAll": true
+      },
+      "id": "e3854c10-7f55-41c2-aad6-8175f6ffe2db",
+      "name": "Get AI results",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        0
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const expected = $('Get expected answers').all().map((item) => item.json);\nconst results = new Map($input.all().map((item) => [item.json.ticket_id, item.json]));\n\nconst mistakes = [];\nlet categoryCorrect = 0;\nlet urgencyCorrect = 0;\nlet bothCorrect = 0;\n\nfor (const ticket of expected) {\n  const result = results.get(ticket.ticket_id) || {};\n  const categoryOk = result.category === ticket.expected_category;\n  const urgencyOk = result.urgency === ticket.expected_urgency;\n  if (categoryOk) categoryCorrect += 1;\n  if (urgencyOk) urgencyCorrect += 1;\n  if (categoryOk && urgencyOk) bothCorrect += 1;\n  if (!categoryOk) mistakes.push(ticket.ticket_id + ' category: ' + (result.category || 'missing') + ' instead of ' + ticket.expected_category);\n  if (!urgencyOk) mistakes.push(ticket.ticket_id + ' urgency: ' + (result.urgency || 'missing') + ' instead of ' + ticket.expected_urgency);\n}\n\nconst rows = [...results.values()];\n\nreturn [{\n  json: {\n    tickets: expected.length,\n    category_correct: categoryCorrect,\n    urgency_correct: urgencyCorrect,\n    both_correct: bothCorrect,\n    needs_human: rows.filter((row) => row.needs_human).length,\n    auto_check_flags: rows.filter((row) => row.auto_checks).length,\n    mistakes: mistakes.join(' | ') || 'none',\n  },\n}];"
+      },
+      "id": "1a2b0be1-52c8-4ccb-9a87-1a84b923393b",
+      "name": "Score results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "iCtGytGlFnljTUGm",
+          "cachedResultName": "Eval Runs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "run_at": "={{ $now.setZone('Europe/Warsaw').toFormat('yyyy-MM-dd HH:mm') }}",
+            "tickets": "={{ $json.tickets }}",
+            "category_correct": "={{ $json.category_correct }}",
+            "urgency_correct": "={{ $json.urgency_correct }}",
+            "both_correct": "={{ $json.both_correct }}",
+            "needs_human": "={{ $json.needs_human }}",
+            "auto_check_flags": "={{ $json.auto_check_flags }}",
+            "mistakes": "={{ $json.mistakes }}"
+          },
+          "schema": [
+            {
+              "id": "run_at",
+              "displayName": "run_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tickets",
+              "displayName": "tickets",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "category_correct",
+              "displayName": "category_correct",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "urgency_correct",
+              "displayName": "urgency_correct",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "both_correct",
+              "displayName": "both_correct",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "needs_human",
+              "displayName": "needs_human",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "auto_check_flags",
+              "displayName": "auto_check_flags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mistakes",
+              "displayName": "mistakes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "20ec0a11-95f8-4ca6-bd9d-16801474fdb9",
+      "name": "Save eval run",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Get expected answers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get expected answers": {
+      "main": [
+        [
+          {
+            "node": "Get AI results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get AI results": {
+      "main": [
+        [
+          {
+            "node": "Score results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score results": {
+      "main": [
+        [
+          {
+            "node": "Save eval run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "d9a106cd-c3b5-4865-b1ce-2decd04f0925",
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp",
+    "instanceId": "50a5eb737fc4edd291c6b30a2198da3e67f8e208f765a53647c5f9464f756307"
+  },
+  "nodeGroups": [],
+  "id": "m6ddDMbF7CHOb0wv",
+  "tags": []
+}
